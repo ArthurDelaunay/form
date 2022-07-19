@@ -1,7 +1,5 @@
 import React from "react"
 
-const regex = new RegExp(/^[\w\.]+@([\w-]+\.)+[\w-]{2,4}$/)
-
 class App extends React.Component {
   constructor() {
     super()
@@ -16,23 +14,26 @@ class App extends React.Component {
       isSubmitted: false
     }
   }
+
   handleEmailChange = (e) => {
+    const regEx = new RegExp(/^[\w\.]+@([\w-]+\.)+[\w-]{2,4}$/)
+    const isValid = regEx.test(e.target.value)
     this.setState({
-      email: e.target.value
+      email: e.target.value,
+      emailIsValid: isValid
     })
-    regex.test(e.target.value) && this.setState({emailIsValid: true})
-      // : this.setState({emailIsValid: false})
-    // console.log(this.state.emailIsValid)
   }
 
   handlePasswordChange = (e) => {
-    this.setState({password: e.target.value}, () => {
-      (e.target.value.length > 5) && this.setState ({passwordIsValid: true})
+    const isValid = e.target.value.length > 5
+    this.setState({
+      password: e.target.value,
+      passwordIsValid: isValid
     })
   }
 
   handleRememberMeChange = (e) => {
-    this.setState({rememberMe: !this.state.rememberMe})
+    this.setState({rememberMe: e.target.checked })
   }
 
   handleFirstNameChange = (e) => {
@@ -44,11 +45,11 @@ class App extends React.Component {
   }
 
   handleSubmit = (e) => {
-    e.preventDefault((this.state.emailIsValid && this.state.passwordIsValid) && this.setState({isSubmitted: true}))
+    e.preventDefault()
+    this.state.emailIsValid && this.state.passwordIsValid && this.setState({isSubmitted: true})
   }
 
   render() {
-     
       return (  
           <section className="m-5">
             {!this.state.isSubmitted 
